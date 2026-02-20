@@ -1,33 +1,51 @@
-# Security Demo - Login/Signup System
+# Security Demo - SQL Injection & Phishing
 
-## ⚠️ WARNING
-This code contains INTENTIONAL security vulnerabilities for educational purposes only.
-**NEVER use this code in production environments.**
+## 📁 Folder Structure
+- `/demo/` - SQL Injection vulnerable application
+- `/phishing/` - Phishing credential harvester
 
-## Vulnerabilities Demonstrated
+## 🔵 SQL Injection Demo
+**Location:** `http://localhost/demo/`
+**Working Payloads:**
+- `admin' OR '1'='1` - Login as admin (any password)
+- `' OR '1'='1` - Login as first user (any password)
+- `admin` / `admin123` - Normal login
 
-### 1. SQL Injection
-- Login and signup forms are vulnerable to SQL injection attacks
-- Example payloads:
-  - Username: `admin' OR '1'='1' --`
-  - Username: `' OR 1=1 --`
+## 🔴 Phishing Demo
+**Location:** `http://localhost/phishing/`
+**Captured credentials:** `/var/www/html/phishing/creds.txt`
 
-### 2. Phishing
-- The HTML pages can be cloned and hosted for phishing demonstrations
-- Forms capture credentials without proper security measures
+## 🗄️ Database Setup
+```bash
+sudo mysql < database.sql
+sudo mysql < setup.sql
 
-## Setup
 
-1. Install XAMPP or similar PHP/MySQL environment
-2. Import `database.sql` into MySQL
-3. Place files in web server directory (e.g., htdocs)
-4. Access via `http://localhost/signuplogin/`
+## 📋 Quick Setup Commands
+```bash
+# Database setup
+sudo mysql < /var/www/html/demo/database.sql
+sudo mysql < /var/www/html/demo/setup.sql
 
-## Testing SQL Injection
+# Permissions
+sudo chmod 755 /var/www/html/demo/*.php
+sudo chmod 755 /var/www/html/phishing/*.php
+sudo chmod 666 /var/www/html/phishing/creds.txt
+sudo chown -R www-data:www-data /var/www/html/
 
-Try these in the login form:
-- Username: `admin' OR '1'='1' --`
-- Password: (anything)
-
-## Educational Use Only
-This is for security training and penetration testing demonstrations in controlled environments.
+/var/www/html/
+├── demo/
+│   ├── index.html (points to login.php)
+│   ├── login.php (SQL injection demo)
+│   ├── signup.html (points to signup.php)
+│   ├── signup.php (vulnerable signup)
+│   ├── style.css
+│   ├── script.js.BACKUP (disabled)
+│   ├── database.sql
+│   └── setup.sql
+└── phishing/
+    ├── index.html (points to post.php)
+    ├── post.php (credential harvester)
+    ├── style.css
+    └── logs/
+        └── captured_creds.txt (stolen credentials)
